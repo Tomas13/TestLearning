@@ -65,6 +65,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
 
                 runOnUiThread(() -> {
                     Toast.makeText(getApplicationContext(), "Hello fromThread", Toast.LENGTH_SHORT).show();
+
                 });
                 Log.d("TAG", "thread is sleeping");
                 Thread.sleep(5000);
