@@ -9,7 +9,8 @@ import java.io.IOException;
 public interface DownloadContract {
 
     interface DownloadView {
-
+        void showLoading();
+        void hideLoading();
     }
 
     interface DownloadPresenter {

@@ -40,6 +40,8 @@ public class DownloadPresenter implements DownloadContract.DownloadPresenter {
 
         @Override
         public void run() {
+
+            downloadView.showLoading();
             try {
                 downloadImageUsingThreads(url);
             } catch (IOException e) {
@@ -83,7 +85,8 @@ public class DownloadPresenter implements DownloadContract.DownloadPresenter {
             successful = true;
 //        }catch (IOException e){
 //            MyLogClass.m(e.getMessage());
-        } finally{
+        } finally {
+            downloadView.hideLoading();
             if (httpURLConnection != null) httpURLConnection.disconnect();
             if (inputStream != null) inputStream.close();
             if (fileOutputStream != null) fileOutputStream.close();
