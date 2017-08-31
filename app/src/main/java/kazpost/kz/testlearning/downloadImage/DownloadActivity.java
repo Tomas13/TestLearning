@@ -43,6 +43,8 @@ public class DownloadActivity extends AppCompatActivity implements DownloadContr
     }
 
 
+
+
     @OnClick(R.id.btn_download)
     public void onViewClicked() {
         String url = etDownload.getText().toString();
