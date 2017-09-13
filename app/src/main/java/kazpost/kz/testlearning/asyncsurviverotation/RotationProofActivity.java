@@ -1,4 +1,4 @@
-package kazpost.kz.testlearning.downloadImage;
+package kazpost.kz.testlearning.asyncsurviverotation;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -11,14 +11,13 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import kazpost.kz.testlearning.R;
 
-public class DownloadActivity extends AppCompatActivity implements DownloadContract.DownloadView {
+public class RotationProofActivity extends AppCompatActivity implements RotationProofContract.RotationProofView {
 
     @BindView(R.id.et_download)
     EditText etDownload;
@@ -33,43 +32,36 @@ public class DownloadActivity extends AppCompatActivity implements DownloadContr
 
     private String[] listOfImages;
 
-    private DownloadPresenter presenter;
+    private RotationProofPresenter presenter;
     private Handler handler;
 
-    private static final String TAG = DownloadActivity.class.getSimpleName();
+    private static final String TAG = RotationProofActivity.class.getSimpleName();
+    private static final String FRAGMENT_TAG = "TaskFragment";
+
+    NonUiTaskFragment mNonUiTaskFragment;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_download);
+        setContentView(R.layout.activity_rotation_proof);
+
         ButterKnife.bind(this);
 
-        handler  = new Handler();
+        handler = new Handler();
         handler.sendMessageAtFrontOfQueue(Message.obtain());
-        presenter = new DownloadPresenter(this);
+        presenter = new RotationProofPresenter(this);
         listOfImages = getResources().getStringArray(R.array.imageUrl);
         listViewDownload.setOnItemClickListener((adapterView, view, i, l) -> etDownload.setText(listOfImages[i]));
 
-        if (savedInstanceState == null){
-            Toast.makeText(this, "First time", Toast.LENGTH_SHORT).show();
-        }else{
+        if (savedInstanceState == null) {
+            mNonUiTaskFragment = new NonUiTaskFragment();
+            getSupportFragmentManager().beginTransaction().add(mNonUiTaskFragment, FRAGMENT_TAG).commit();
+        } else {
+            mNonUiTaskFragment = (NonUiTaskFragment) getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG);
             Log.d(TAG, savedInstanceState.toString());
-            Toast.makeText(this, savedInstanceState.get("key").toString(), Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, savedInstanceState.get("key").toString(), Toast.LENGTH_SHORT).show();
         }
-
-
-//        animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.vec);
-//
-//        etDownload.setAnimation(animation);
-//        animation.start();
-    }
-
-//    Animation animation;
-
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putString("key", "Zhangali");
 
     }
 
@@ -77,9 +69,14 @@ public class DownloadActivity extends AppCompatActivity implements DownloadContr
     public void onViewClicked() {
         String url = etDownload.getText().toString();
 
+        if (url.length() > 0) {
+//            presenter.downloadImage(url);
 
-        presenter.downloadImage(url);
+            mNonUiTaskFragment.beginTask(url);
+        }
+
     }
+
 
     @Override
     public void showLoading() {
@@ -89,10 +86,9 @@ public class DownloadActivity extends AppCompatActivity implements DownloadContr
 
     @Override
     public void hideLoading() {
-//        this.runOnUiThread(() -> linearLayout.setVisibility(View.GONE));
-
         handler.post(() -> {
-           linearLayout.setVisibility(View.GONE);
+            linearLayout.setVisibility(View.GONE);
         });
+
     }
 }

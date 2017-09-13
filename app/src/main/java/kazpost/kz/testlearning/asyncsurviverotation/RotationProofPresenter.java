@@ -1,4 +1,4 @@
-package kazpost.kz.testlearning.downloadImage;
+package kazpost.kz.testlearning.asyncsurviverotation;
 
 import android.net.Uri;
 import android.os.Environment;
@@ -11,38 +11,34 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
- * Created by root on 8/25/17.
+ * Created by root on 9/13/17.
  */
 
-public class DownloadPresenter implements DownloadContract.DownloadPresenter {
+public class RotationProofPresenter implements RotationProofContract.RotationProofPresenter {
 
-    private DownloadContract.DownloadView downloadView;
-
-    public DownloadPresenter(DownloadContract.DownloadView downloadView) {
-        this.downloadView = downloadView;
-    }
+    RotationProofContract.RotationProofView mView;
 
     private String url;
 
-    @Override
-    public void downloadImage(String url) {
-//        downloadImageUsingThreads(url);
-
-        this.url = url;
-
-        Thread myThread = new Thread(new DownloadImagesThread());
-        myThread.start();
-
+    public RotationProofPresenter(RotationProofContract.RotationProofView mView) {
+        this.mView = mView;
     }
 
+    @Override
+    public void downloadImage(String url) {
+
+
+
+        this.url = url;
+        Thread myThread = new Thread(new RotationProofPresenter.DownloadImagesThread());
+        myThread.start();
+    }
 
     private class DownloadImagesThread implements Runnable {
 
         @Override
         public void run() {
-
-
-            downloadView.showLoading();
+            mView.showLoading();
             try {
                 downloadImageUsingThreads(url);
             } catch (IOException e) {
@@ -51,17 +47,8 @@ public class DownloadPresenter implements DownloadContract.DownloadPresenter {
         }
     }
 
-
-    /**
-     * 1 create the url object that represent the url
-     * 2 open connection using that url object
-     * 3 read data using input stream into a byte array
-     * 4 open a file output stream to save data on sd card
-     * 5 write data to the fileoutputstream
-     */
     @Override
     public boolean downloadImageUsingThreads(String url) throws IOException {
-
         boolean successful = false;
         URL downloadUrl = null;
         HttpURLConnection httpURLConnection = null;
@@ -88,18 +75,18 @@ public class DownloadPresenter implements DownloadContract.DownloadPresenter {
 //        }catch (IOException e){
 //            MyLogClass.m(e.getMessage());
         } finally {
-            downloadView.hideLoading();
+            mView.hideLoading();
             if (httpURLConnection != null) httpURLConnection.disconnect();
             if (inputStream != null) inputStream.close();
             if (fileOutputStream != null) fileOutputStream.close();
         }
 
         return successful;
-    }
 
+    }
 
     @Override
     public void onDestroy() {
-        downloadView = null;
+        mView = null;
     }
 }

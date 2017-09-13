@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:android="http://schemas.android.com/apk/res/android">
+    <animated-vector
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:aapt="http://schemas.android.com/aapt">
+        <aapt:attr name="android:drawable">
+            <vector
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:width="24dp"
+                android:height="24dp"
+                android:viewportWidth="24"
+                android:viewportHeight="24">
+                <path
+                    android:name="path_1"
+                    android:pathData="M 12 12 L 20 4 Z"/>
+                <path
+                    android:name="path"
+                    android:pathData="M 4 4 L 12 12 Z"/>
+            </vector>
+        </aapt:attr>
+        <target android:name="path_1">
+            <aapt:attr name="android:animation">
+                <objectAnimator
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:propertyName="pathData"
+                    android:startOffset="150"
+                    android:duration="150"
+                    android:valueFrom="M 12 12 L 20 4 Z"
+                    android:valueTo="M 12 12 L 20 4 Z"
+                    android:valueType="pathType"/>
+                    <!--android:interpolator="@android:interpolator/fast_out_slow_in"&ndash;&gt;/>-->
+            </aapt:attr>
+        </target>
+        <target android:name="path">
+            <aapt:attr name="android:animation">
+                <objectAnimator
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:propertyName="pathData"
+                    android:duration="150"
+                    android:valueFrom="M 4 4 L 12 12 Z"
+                    android:valueTo="M 4 4 L 12 12 Z"
+                    android:valueType="pathType"/>
+                    <!--android:interpolator="@android:interpolator/fast_out_slow_in"-->
+            </aapt:attr>
+        </target>
+    </animated-vector>
+</set>
