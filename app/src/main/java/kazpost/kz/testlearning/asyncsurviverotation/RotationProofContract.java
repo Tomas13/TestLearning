@@ -11,6 +11,8 @@ public interface RotationProofContract {
     interface RotationProofView {
         void showLoading();
 
+        void updateProgress(int progress);
+
         void hideLoading();
     }
 

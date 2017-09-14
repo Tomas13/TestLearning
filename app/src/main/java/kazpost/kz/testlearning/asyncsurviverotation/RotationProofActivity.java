@@ -16,6 +16,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import kazpost.kz.testlearning.R;
+import kazpost.kz.testlearning.util.MyLogClass;
 
 public class RotationProofActivity extends AppCompatActivity implements RotationProofContract.RotationProofView {
 
@@ -32,7 +33,7 @@ public class RotationProofActivity extends AppCompatActivity implements Rotation
 
     private String[] listOfImages;
 
-    private RotationProofPresenter presenter;
+    RotationProofPresenter mPresenter;
     private Handler handler;
 
     private static final String TAG = RotationProofActivity.class.getSimpleName();
@@ -50,7 +51,7 @@ public class RotationProofActivity extends AppCompatActivity implements Rotation
 
         handler = new Handler();
         handler.sendMessageAtFrontOfQueue(Message.obtain());
-        presenter = new RotationProofPresenter(this);
+        mPresenter = new RotationProofPresenter(this);
         listOfImages = getResources().getStringArray(R.array.imageUrl);
         listViewDownload.setOnItemClickListener((adapterView, view, i, l) -> etDownload.setText(listOfImages[i]));
 
@@ -63,16 +64,20 @@ public class RotationProofActivity extends AppCompatActivity implements Rotation
 //            Toast.makeText(this, savedInstanceState.get("key").toString(), Toast.LENGTH_SHORT).show();
         }
 
+       /* if (mNonUiTaskFragment != null && mNonUiTaskFragment.mMyTask != null
+                && mNonUiTaskFragment.mMyTask.getStatus() == AsyncTask.Status.RUNNING) {
+            linearLayout.setVisibility(View.VISIBLE);
+        }*/
     }
 
     @OnClick(R.id.btn_download)
     public void onViewClicked() {
         String url = etDownload.getText().toString();
-
         if (url.length() > 0) {
-//            presenter.downloadImage(url);
-
+//            mPresenter.downloadImage(url);
             mNonUiTaskFragment.beginTask(url);
+        }else{
+            MyLogClass.toast(this, "no url");
         }
 
     }
@@ -80,15 +85,23 @@ public class RotationProofActivity extends AppCompatActivity implements Rotation
 
     @Override
     public void showLoading() {
-        this.runOnUiThread(() -> linearLayout.setVisibility(View.VISIBLE));
+//        if (mNonUiTaskFragment.mMyTask != null && progressDownload.getVisibility() != View.VISIBLE
+//                && progressDownload.getProgress() != progressDownload.getMax()) {
+            this.runOnUiThread(() -> linearLayout.setVisibility(View.VISIBLE));
+//        }
+    }
 
+    @Override
+    public void updateProgress(int progress) {
+        progressDownload.setProgress(progress);
     }
 
     @Override
     public void hideLoading() {
-        handler.post(() -> {
-            linearLayout.setVisibility(View.GONE);
-        });
-
+//        if (mNonUiTaskFragment.mMyTask != null && progressDownload.getVisibility() == View.VISIBLE) {
+            handler.post(() -> {
+                linearLayout.setVisibility(View.GONE);
+            });
+//        }
     }
 }
