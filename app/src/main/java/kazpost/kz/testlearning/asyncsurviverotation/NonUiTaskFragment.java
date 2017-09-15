@@ -33,6 +33,8 @@ public class NonUiTaskFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        //Retain this fragment across configuration changes
         setRetainInstance(true);
     }
 
