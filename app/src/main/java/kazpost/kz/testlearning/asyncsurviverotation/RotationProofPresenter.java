@@ -28,7 +28,6 @@ public class RotationProofPresenter implements RotationProofContract.RotationPro
     public void downloadImage(String url) {
 
 
-
         this.url = url;
         Thread myThread = new Thread(new RotationProofPresenter.DownloadImagesThread());
         myThread.start();

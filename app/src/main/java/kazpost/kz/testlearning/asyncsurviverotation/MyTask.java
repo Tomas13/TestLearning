@@ -4,14 +4,13 @@ import android.app.Activity;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.widget.Toast;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import kazpost.kz.testlearning.util.MyLogClass;
@@ -24,7 +23,6 @@ public class MyTask extends AsyncTask<String, Integer, Boolean> {
 
     private int mContentLength = -1;
     private int mCounter = 0;
-    private int mCalculatedProgress = 0;
     private Activity mActivity;
 
     public MyTask(Activity activity) {
@@ -47,13 +45,12 @@ public class MyTask extends AsyncTask<String, Integer, Boolean> {
     @Override
     protected Boolean doInBackground(String[] strings) {
 
-
         boolean successful = false;
-        URL downloadUrl = null;
+        URL downloadUrl;
         HttpURLConnection httpURLConnection = null;
         InputStream inputStream = null;
         FileOutputStream fileOutputStream = null;
-        File file = null;
+        File file;
         try {
             downloadUrl = new URL(strings[0]);
             httpURLConnection = (HttpURLConnection) downloadUrl.openConnection();
@@ -71,17 +68,14 @@ public class MyTask extends AsyncTask<String, Integer, Boolean> {
                 fileOutputStream.write(buffer, 0, read);
                 mCounter += read;
                 publishProgress(mCounter);
-                MyLogClass.m("count "  + mCounter);
+                MyLogClass.m("count " + mCounter);
             }
             successful = true;
 
             return successful;
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+            MyLogClass.m(e.getMessage());
         } finally {
 //            mView.hideLoading();
             if (httpURLConnection != null) httpURLConnection.disconnect();
@@ -96,10 +90,6 @@ public class MyTask extends AsyncTask<String, Integer, Boolean> {
                 e.printStackTrace();
             }
         }
-
-
-
-
 //        ((RotationProofActivity) mActivity).mPresenter.downloadImage(strings[0]);
         return successful;
     }
@@ -107,10 +97,10 @@ public class MyTask extends AsyncTask<String, Integer, Boolean> {
     @Override
     protected void onProgressUpdate(Integer... values) {
 
-        if (mActivity == null){
+        if (mActivity == null) {
             MyLogClass.m("Skipping progress update since activity is null");
-        }else{
-            mCalculatedProgress = (int) (((double) values[0] / mContentLength) * 100);
+        } else {
+            int mCalculatedProgress = (int) (((double) values[0] / mContentLength) * 100);
             ((RotationProofActivity) mActivity).updateProgress(mCalculatedProgress);
         }
     }
@@ -118,6 +108,7 @@ public class MyTask extends AsyncTask<String, Integer, Boolean> {
     @Override
     protected void onPostExecute(Boolean aBoolean) {
         if (mActivity != null) ((RotationProofActivity) mActivity).hideLoading();
+        mActivity.runOnUiThread(() -> Toast.makeText(mActivity, "Finished", Toast.LENGTH_SHORT).show());
         MyLogClass.m("Finished");
 
     }

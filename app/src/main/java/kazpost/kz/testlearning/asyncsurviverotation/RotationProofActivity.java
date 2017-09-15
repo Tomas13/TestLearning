@@ -1,5 +1,6 @@
 package kazpost.kz.testlearning.asyncsurviverotation;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -64,10 +65,10 @@ public class RotationProofActivity extends AppCompatActivity implements Rotation
 //            Toast.makeText(this, savedInstanceState.get("key").toString(), Toast.LENGTH_SHORT).show();
         }
 
-       /* if (mNonUiTaskFragment != null && mNonUiTaskFragment.mMyTask != null
+        if (mNonUiTaskFragment != null && mNonUiTaskFragment.mMyTask != null
                 && mNonUiTaskFragment.mMyTask.getStatus() == AsyncTask.Status.RUNNING) {
             linearLayout.setVisibility(View.VISIBLE);
-        }*/
+        }
     }
 
     @OnClick(R.id.btn_download)
